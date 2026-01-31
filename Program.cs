@@ -6,30 +6,31 @@ namespace W4_assignment_template;
 
 class Program
 {
-    static IFileHandler fileHandler;
-    static List<Character> characters;
+    // Notice: We use the INTERFACE, not the concrete class!
+    // This is the key to OCP - we can swap implementations without changing this code.
+    static IFileHandler fileHandler = null!;
+    static List<Character> characters = new();
+    static string currentFilePath = string.Empty;
 
     static void Main()
     {
-        // TODO (Stretch Goal): 
-        // Allow the user to choose the file format (CSV or JSON) at runtime.
-        // You can add a menu option to switch between CsvFileHandler and JsonFileHandler,
-        // and update filePath accordingly (e.g., "input.csv" or "input.json").
-        // This enables dynamic switching of file formats using the IFileHandler interface.
-
-        string filePath = "input.csv"; // Default to CSV file
-        fileHandler = new CsvFileHandler(); // Default to CSV handler
-        characters = fileHandler.ReadCharacters(filePath);
+        // Default to CSV - same data as Week 3, but now using the interface
+        SetFileFormat("csv");
+        characters = fileHandler.ReadAll();
 
         while (true)
         {
-            Console.WriteLine("Menu:");
-            Console.WriteLine("1. Display Characters");
-            Console.WriteLine("2. Add Character");
-            Console.WriteLine("3. Level Up Character");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine();
+            Console.WriteLine("=== Character Manager ===");
+            Console.WriteLine("1. Display All Characters");
+            Console.WriteLine("2. Find Character by Name");
+            Console.WriteLine("3. Find Characters by Class");
+            Console.WriteLine("4. Add Character");
+            Console.WriteLine("5. Level Up Character");
+            Console.WriteLine("6. Switch File Format (CSV/JSON)");
+            Console.WriteLine("0. Save and Exit");
             Console.Write("Enter your choice: ");
-            string choice = Console.ReadLine();
+            string choice = Console.ReadLine() ?? "";
 
             switch (choice)
             {
@@ -37,13 +38,23 @@ class Program
                     DisplayAllCharacters();
                     break;
                 case "2":
-                    AddCharacter();
+                    FindCharacterByName();
                     break;
                 case "3":
-                    LevelUpCharacter();
+                    FindCharactersByClass();
                     break;
                 case "4":
-                    fileHandler.WriteCharacters(filePath, characters);
+                    AddCharacter();
+                    break;
+                case "5":
+                    LevelUpCharacter();
+                    break;
+                case "6":
+                    SwitchFileFormat();
+                    break;
+                case "0":
+                    fileHandler.WriteAll(characters);
+                    Console.WriteLine($"Characters saved to {currentFilePath}");
                     return;
                 default:
                     Console.WriteLine("Invalid choice. Please try again.");
@@ -52,36 +63,146 @@ class Program
         }
     }
 
+    /// <summary>
+    /// Sets the file format by swapping the handler implementation.
+    /// This demonstrates OCP - we can add new formats without modifying existing code!
+    /// </summary>
+    static void SetFileFormat(string format)
+    {
+        currentFilePath = Path.Combine("Files", format == "json" ? "input.json" : "input.csv");
+
+        // Swap implementations based on format - THIS is OCP in action!
+        if (format == "json")
+        {
+            fileHandler = new JsonFileHandler(currentFilePath);
+        }
+        else
+        {
+            fileHandler = new CsvFileHandler(currentFilePath);
+        }
+
+        Console.WriteLine($"Using {format.ToUpper()} format: {currentFilePath}");
+    }
+
     static void DisplayAllCharacters()
     {
+        Console.WriteLine("\n--- All Characters ---");
+        if (characters.Count == 0)
+        {
+            Console.WriteLine("No characters found.");
+            return;
+        }
+
         foreach (var character in characters)
         {
-            Console.WriteLine($"Name: {character.Name}, Class: {character.Class}, Level: {character.Level}, HP: {character.HP}, Equipment: {string.Join(", ", character.Equipment)}");
+            Console.WriteLine(character);
+        }
+    }
+
+    static void FindCharacterByName()
+    {
+        Console.Write("Enter character name to find: ");
+        string name = Console.ReadLine() ?? "";
+
+        // Use the handler's FindByName method (LINQ inside!)
+        var character = fileHandler.FindByName(characters, name);
+
+        if (character != null)
+        {
+            Console.WriteLine($"Found: {character}");
+        }
+        else
+        {
+            Console.WriteLine($"No character found with name '{name}'");
+        }
+    }
+
+    static void FindCharactersByClass()
+    {
+        Console.Write("Enter character class to filter (e.g., Fighter, Wizard): ");
+        string characterClass = Console.ReadLine() ?? "";
+
+        // Use the handler's FindByClass method (LINQ inside!)
+        var results = fileHandler.FindByClass(characters, characterClass);
+
+        Console.WriteLine($"\n--- {characterClass} Characters ({results.Count} found) ---");
+        foreach (var character in results)
+        {
+            Console.WriteLine(character);
         }
     }
 
     static void AddCharacter()
     {
-        // TODO: Implement logic to add a new character
-        // Prompt for character details (name, class, level, hit points, equipment)
-        // Add the new character to the characters list
+        Console.WriteLine("\n--- Add New Character ---");
+
+        Console.Write("Name: ");
+        string name = Console.ReadLine() ?? "";
+
+        Console.Write("Class (Fighter, Wizard, Rogue, etc.): ");
+        string characterClass = Console.ReadLine() ?? "";
+
+        Console.Write("Level: ");
+        int.TryParse(Console.ReadLine(), out int level);
+
+        Console.Write("HP: ");
+        int.TryParse(Console.ReadLine(), out int hp);
+
+        Console.Write("Equipment (comma-separated, e.g., sword,shield,potion): ");
+        string equipmentInput = Console.ReadLine() ?? "";
+        var equipment = equipmentInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                      .Select(e => e.Trim())
+                                      .ToList();
+
+        var newCharacter = new Character(name, characterClass, level, hp, equipment);
+        characters.Add(newCharacter);
+
+        Console.WriteLine($"Added: {newCharacter}");
     }
 
     static void LevelUpCharacter()
     {
         Console.Write("Enter the name of the character to level up: ");
-        string nameToLevelUp = Console.ReadLine();
+        string name = Console.ReadLine() ?? "";
 
-        var character = characters.Find(c => c.Name.Equals(nameToLevelUp, StringComparison.OrdinalIgnoreCase));
+        var character = fileHandler.FindByName(characters, name);
+
         if (character != null)
         {
-            // TODO: Implement logic to level up the character
-            // character.Level++;
-            // Console.WriteLine($"Character {character.Name} leveled up to level {character.Level}!");
+            character.Level++;
+            Console.WriteLine($"{character.Name} leveled up to level {character.Level}!");
         }
         else
         {
             Console.WriteLine("Character not found.");
+        }
+    }
+
+    static void SwitchFileFormat()
+    {
+        Console.WriteLine("\n--- Switch File Format ---");
+        Console.WriteLine("1. CSV");
+        Console.WriteLine("2. JSON");
+        Console.Write("Choose format: ");
+        string choice = Console.ReadLine() ?? "";
+
+        // Save current characters before switching
+        fileHandler.WriteAll(characters);
+        Console.WriteLine($"Saved to {currentFilePath}");
+
+        // Switch to new format
+        string newFormat = choice == "2" ? "json" : "csv";
+        SetFileFormat(newFormat);
+
+        // Load characters from new format (or keep current if file doesn't exist)
+        try
+        {
+            characters = fileHandler.ReadAll();
+            Console.WriteLine($"Loaded {characters.Count} characters from {currentFilePath}");
+        }
+        catch
+        {
+            Console.WriteLine($"No existing {newFormat.ToUpper()} file found. Keeping current characters.");
         }
     }
 }

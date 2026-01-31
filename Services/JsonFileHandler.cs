@@ -1,23 +1,83 @@
+using System.Text.Json;
 using W4_assignment_template.Interfaces;
 using W4_assignment_template.Models;
 
-// NOTE: The Character class uses [JsonProperty] attributes to map C# property names
-// to the lowercase JSON keys required by the assignment. This ensures correct
-// serialization and deserialization when reading from or writing to JSON files.
-
 namespace W4_assignment_template.Services;
 
+/// <summary>
+/// JSON implementation of IFileHandler.
+///
+/// This is the NEW implementation you're adding this week!
+/// Notice how we can add JSON support without modifying CsvFileHandler at all.
+/// That's the Open/Closed Principle in action:
+/// - Open for extension (adding JsonFileHandler)
+/// - Closed for modification (CsvFileHandler unchanged)
+/// </summary>
 public class JsonFileHandler : IFileHandler
 {
-    public List<Character> ReadCharacters(string filePath)
+    private readonly string _filePath;
+    private readonly JsonSerializerOptions _jsonOptions;
+
+    public JsonFileHandler(string filePath)
     {
-        // TODO: Implement JSON reading logic
-        throw new NotImplementedException();
+        _filePath = filePath;
+        _jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true  // Makes the JSON human-readable
+        };
     }
 
-    public void WriteCharacters(string filePath, List<Character> characters)
+    public List<Character> ReadAll()
+    {
+        // TODO: Implement JSON reading logic
+        // Hint:
+        // string json = File.ReadAllText(_filePath);
+        // return JsonSerializer.Deserialize<List<Character>>(json) ?? new List<Character>();
+
+        throw new NotImplementedException("Implement JSON reading logic");
+    }
+
+    public void WriteAll(List<Character> characters)
     {
         // TODO: Implement JSON writing logic
-        throw new NotImplementedException();
+        // Hint:
+        // string json = JsonSerializer.Serialize(characters, _jsonOptions);
+        // File.WriteAllText(_filePath, json);
+
+        throw new NotImplementedException("Implement JSON writing logic");
+    }
+
+    public void AppendCharacter(Character character)
+    {
+        // TODO: Implement append logic for JSON
+        // Note: JSON doesn't support simple "append" like CSV does.
+        // You need to: 1) Read existing, 2) Add to list, 3) Write all back
+        //
+        // Hint:
+        // var characters = new List<Character>();
+        // if (File.Exists(_filePath))
+        // {
+        //     string existingJson = File.ReadAllText(_filePath);
+        //     characters = JsonSerializer.Deserialize<List<Character>>(existingJson) ?? new List<Character>();
+        // }
+        // characters.Add(character);
+        // WriteAll(characters);
+
+        throw new NotImplementedException("Implement JSON append logic");
+    }
+
+    public Character? FindByName(List<Character> characters, string name)
+    {
+        // The LINQ logic is the same as CSV - that's the beauty of interfaces!
+        // The only difference is HOW we read the data, not how we search it.
+        return characters.FirstOrDefault(c =>
+            c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public List<Character> FindByClass(List<Character> characters, string characterClass)
+    {
+        // Same LINQ logic works regardless of where the data came from
+        return characters.Where(c =>
+            c.Class.Equals(characterClass, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 }
