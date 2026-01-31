@@ -9,17 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Files\input.csv" />
-    <None Remove="Files\input.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Files\input.csv">
+    <None Update="Files\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Files\input.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </None>
   </ItemGroup>
 
 </Project>
