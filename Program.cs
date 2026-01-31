@@ -24,7 +24,7 @@ class Program
             Console.WriteLine("=== Character Manager ===");
             Console.WriteLine("1. Display All Characters");
             Console.WriteLine("2. Find Character by Name");
-            Console.WriteLine("3. Find Characters by Class");
+            Console.WriteLine("3. Find Characters by Profession");
             Console.WriteLine("4. Add Character");
             Console.WriteLine("5. Level Up Character");
             Console.WriteLine("6. Switch File Format (CSV/JSON)");
@@ -41,7 +41,7 @@ class Program
                     FindCharacterByName();
                     break;
                 case "3":
-                    FindCharactersByClass();
+                    FindCharactersByProfession();
                     break;
                 case "4":
                     AddCharacter();
@@ -117,15 +117,15 @@ class Program
         }
     }
 
-    static void FindCharactersByClass()
+    static void FindCharactersByProfession()
     {
-        Console.Write("Enter character class to filter (e.g., Fighter, Wizard): ");
-        string characterClass = Console.ReadLine() ?? "";
+        Console.Write("Enter character profession to filter (e.g., Fighter, Wizard): ");
+        string profession = Console.ReadLine() ?? "";
 
-        // Use the handler's FindByClass method (LINQ inside!)
-        var results = fileHandler.FindByClass(characters, characterClass);
+        // Use the handler's FindByProfession method (LINQ inside!)
+        var results = fileHandler.FindByProfession(characters, profession);
 
-        Console.WriteLine($"\n--- {characterClass} Characters ({results.Count} found) ---");
+        Console.WriteLine($"\n--- {profession} Characters ({results.Count} found) ---");
         foreach (var character in results)
         {
             Console.WriteLine(character);
@@ -139,8 +139,8 @@ class Program
         Console.Write("Name: ");
         string name = Console.ReadLine() ?? "";
 
-        Console.Write("Class (Fighter, Wizard, Rogue, etc.): ");
-        string characterClass = Console.ReadLine() ?? "";
+        Console.Write("Profession (Fighter, Wizard, Rogue, etc.): ");
+        string profession = Console.ReadLine() ?? "";
 
         Console.Write("Level: ");
         int.TryParse(Console.ReadLine(), out int level);
@@ -154,7 +154,7 @@ class Program
                                       .Select(e => e.Trim())
                                       .ToList();
 
-        var newCharacter = new Character(name, characterClass, level, hp, equipment);
+        var newCharacter = new Character(name, profession, level, hp, equipment);
         characters.Add(newCharacter);
 
         Console.WriteLine($"Added: {newCharacter}");

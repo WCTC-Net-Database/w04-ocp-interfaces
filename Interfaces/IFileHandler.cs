@@ -11,7 +11,7 @@ namespace W4_assignment_template.Interfaces;
 ///
 /// Notice how this builds on Week 3's CharacterReader/CharacterWriter:
 /// - ReadAll() and WriteAll() come from those classes
-/// - FindByName() and FindByClass() bring in the LINQ methods you learned
+/// - FindByName() and FindByProfession() bring in the LINQ methods you learned
 ///
 /// This same pattern extends to databases in Week 9:
 /// - DbContext is essentially an IFileHandler for SQL Server!
@@ -44,8 +44,8 @@ public interface IFileHandler
     Character? FindByName(List<Character> characters, string name);
 
     /// <summary>
-    /// Finds all characters of a specific class using LINQ.
-    /// (From Week 3's CharacterReader.FindByClass)
+    /// Finds all characters of a specific profession using LINQ.
+    /// (From Week 3's CharacterReader.FindByProfession)
     /// </summary>
-    List<Character> FindByClass(List<Character> characters, string characterClass);
+    List<Character> FindByProfession(List<Character> characters, string profession);
 }

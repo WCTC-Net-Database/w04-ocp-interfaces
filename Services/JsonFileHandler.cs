@@ -74,10 +74,10 @@ public class JsonFileHandler : IFileHandler
             c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
-    public List<Character> FindByClass(List<Character> characters, string characterClass)
+    public List<Character> FindByProfession(List<Character> characters, string profession)
     {
         // Same LINQ logic works regardless of where the data came from
         return characters.Where(c =>
-            c.Class.Equals(characterClass, StringComparison.OrdinalIgnoreCase)).ToList();
+            c.Profession.Equals(profession, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 }

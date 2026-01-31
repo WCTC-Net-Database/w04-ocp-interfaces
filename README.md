@@ -66,7 +66,7 @@ public interface IFileHandler
     // From CharacterReader
     List<Character> ReadAll();
     Character? FindByName(List<Character> characters, string name);
-    List<Character> FindByClass(List<Character> characters, string characterClass);
+    List<Character> FindByProfession(List<Character> characters, string profession);
 
     // From CharacterWriter
     void WriteAll(List<Character> characters);
@@ -118,11 +118,11 @@ public class CsvFileHandler : IFileHandler
             c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
-    public List<Character> FindByClass(List<Character> characters, string characterClass)
+    public List<Character> FindByProfession(List<Character> characters, string profession)
     {
         // Your Week 3 LINQ logic
         return characters.Where(c =>
-            c.Class.Equals(characterClass, StringComparison.OrdinalIgnoreCase)).ToList();
+            c.Profession.Equals(profession, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 }
 ```
@@ -132,7 +132,7 @@ public class CsvFileHandler : IFileHandler
 **What to do:**
 - Create `JsonFileHandler.cs` that implements `IFileHandler`
 - Use `System.Text.Json` for JSON handling
-- The LINQ methods (FindByName, FindByClass) are IDENTICAL to CSV!
+- The LINQ methods (FindByName, FindByProfession) are IDENTICAL to CSV!
 
 **Example:**
 ```csharp
@@ -175,10 +175,10 @@ public class JsonFileHandler : IFileHandler
             c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
-    public List<Character> FindByClass(List<Character> characters, string characterClass)
+    public List<Character> FindByProfession(List<Character> characters, string profession)
     {
         return characters.Where(c =>
-            c.Class.Equals(characterClass, StringComparison.OrdinalIgnoreCase)).ToList();
+            c.Profession.Equals(profession, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 }
 ```
@@ -233,14 +233,14 @@ Your JSON file should look like:
 [
   {
     "Name": "John",
-    "Class": "Fighter",
+    "Profession": "Fighter",
     "Level": 1,
     "HP": 10,
     "Equipment": ["sword", "shield", "potion"]
   },
   {
     "Name": "Jane",
-    "Class": "Wizard",
+    "Profession": "Wizard",
     "Level": 2,
     "HP": 6,
     "Equipment": ["staff", "robe", "book"]
@@ -296,7 +296,7 @@ IFileHandler handler = new XmlFileHandler("input.xml");  // Just add new class!
 | CsvFileHandler | 25 | Correctly implements interface with Week 3 logic |
 | JsonFileHandler | 25 | Correctly implements interface for JSON |
 | OCP Compliance | 15 | Program uses interface, not concrete classes |
-| LINQ Methods | 5 | FindByName and FindByClass work correctly |
+| LINQ Methods | 5 | FindByName and FindByProfession work correctly |
 | Code Quality | 10 | Clean, readable, follows patterns |
 | **Total** | **100** | |
 | **Stretch: Format Switching** | **+10** | Switch formats via menu at runtime |
@@ -335,7 +335,7 @@ When you learn Entity Framework Core, you'll recognize the pattern immediately!
 - Implement CSV first (it's just your Week 3 code reorganized)
 - JSON is easier to debug (human-readable format)
 - Use `JsonSerializerOptions { WriteIndented = true }` for readable JSON output
-- The LINQ methods (FindByName, FindByClass) are IDENTICAL across implementations!
+- The LINQ methods (FindByName, FindByProfession) are IDENTICAL across implementations!
 
 ---
 

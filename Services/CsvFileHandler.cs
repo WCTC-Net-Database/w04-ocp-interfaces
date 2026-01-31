@@ -52,10 +52,10 @@ public class CsvFileHandler : IFileHandler
         throw new NotImplementedException("Copy your Week 3 FindByName LINQ here");
     }
 
-    public List<Character> FindByClass(List<Character> characters, string characterClass)
+    public List<Character> FindByProfession(List<Character> characters, string profession)
     {
         // TODO: Copy your Week 3 LINQ logic here
-        // Hint: return characters.Where(c => c.Class.Equals(characterClass, StringComparison.OrdinalIgnoreCase)).ToList();
-        throw new NotImplementedException("Copy your Week 3 FindByClass LINQ here");
+        // Hint: return characters.Where(c => c.Profession.Equals(profession, StringComparison.OrdinalIgnoreCase)).ToList();
+        throw new NotImplementedException("Copy your Week 3 FindByProfession LINQ here");
     }
 }
