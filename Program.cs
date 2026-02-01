@@ -1,8 +1,8 @@
-using W4_assignment_template.Interfaces;
-using W4_assignment_template.Models;
-using W4_assignment_template.Services;
+using W04.Interfaces;
+using W04.Models;
+using W04.Services;
 
-namespace W4_assignment_template;
+namespace W04;
 
 class Program
 {

@@ -1,6 +1,6 @@
-using W4_assignment_template.Models;
+using W04.Models;
 
-namespace W4_assignment_template.Interfaces;
+namespace W04.Interfaces;
 
 /// <summary>
 /// Interface for handling character data storage in any format.

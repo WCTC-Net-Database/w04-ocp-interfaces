@@ -1,8 +1,8 @@
 using System.Text.Json;
-using W4_assignment_template.Interfaces;
-using W4_assignment_template.Models;
+using W04.Interfaces;
+using W04.Models;
 
-namespace W4_assignment_template.Services;
+namespace W04.Services;
 
 /// <summary>
 /// JSON implementation of IFileHandler.
